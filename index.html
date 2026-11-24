@@ -421,6 +421,12 @@
         </div>
     </div>
 
+    <!-- Audio Players (รองรับทั้งไฟล์ song.mp3 และ YouTube) -->
+    <audio id="localAudio" src="./song.mp3" loop preload="auto"></audio>
+    <div id="ytPlayerContainer" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; pointer-events: none;">
+        <div id="ytPlayer"></div>
+    </div>
+
     <!-- ==========================================
        JAVASCRIPT: ตั้งค่ารูปภาพ ข้อความ และอนิเมชัน
        (แก้ไขข้อมูลของคู่คุณได้ตรงนี้เลยครับ!)
@@ -680,57 +686,85 @@
         animateSky();
 
         // ==========================================
-        // WEB AUDIO API: เสียงดนตรีกล่องดนตรีเบาๆ (ไม่ต้องใช้ไฟล์ mp3)
+        // MUSIC PLAYER: รักแรกพบ - Tattoo Colour (YouTube / MP3)
         // ==========================================
-        let audioCtx = null;
+        let ytPlayer = null;
         let isPlaying = false;
-        let melodyInterval = null;
+        let useLocalAudio = false;
+        const localAudio = document.getElementById('localAudio');
 
-        // โน้ตเพลงทำนองอบอุ่น (Pentatonic Music Box)
-        const notes = [523.25, 587.33, 659.25, 783.99, 880.00, 783.99, 659.25, 587.33];
-        let noteIndex = 0;
-
-        function playSoftNote(freq) {
-            if (!audioCtx) return;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-
-            gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.045, audioCtx.currentTime + 0.08);
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
-
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.85);
+        // ตรวจสอบว่ามีไฟล์ song.mp3 ในเครื่องหรือไม่
+        if (localAudio) {
+            localAudio.addEventListener('canplaythrough', () => {
+                useLocalAudio = true;
+            });
+            localAudio.addEventListener('error', () => {
+                useLocalAudio = false;
+            });
         }
+
+        // โหลด YouTube IFrame API สำหรับเล่นเพลง รักแรกพบ (rc7KnQAh_1I)
+        const ytScript = document.createElement('script');
+        ytScript.src = "https://www.youtube.com/iframe_api";
+        const firstScript = document.getElementsByTagName('script')[0];
+        firstScript.parentNode.insertBefore(ytScript, firstScript);
+
+        window.onYouTubeIframeAPIReady = function () {
+            ytPlayer = new YT.Player('ytPlayer', {
+                height: '1',
+                width: '1',
+                videoId: 'rc7KnQAh_1I',
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': 'rc7KnQAh_1I',
+                    'playsinline': 1
+                },
+                events: {
+                    'onReady': () => {
+                        console.log('YouTube Player Ready');
+                    }
+                }
+            });
+        };
 
         function toggleMusic() {
             const vinyl = document.getElementById('vinylIcon');
             const label = document.getElementById('musicLabel');
 
             if (!isPlaying) {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
-                if (audioCtx.state === 'suspended') {
-                    audioCtx.resume();
-                }
                 isPlaying = true;
                 vinyl.classList.add('spin-vinyl');
-                label.textContent = "กำลังเล่นเพลงคลอ...";
-                playSoftNote(notes[noteIndex++ % notes.length]);
-                melodyInterval = setInterval(() => {
-                    playSoftNote(notes[noteIndex++ % notes.length]);
-                }, 950);
+                label.textContent = "รักแรกพบ - Tattoo Colour 🎵";
+
+                // ถ้ามีไฟล์ song.mp3 ให้เล่นไฟล์ mp3 ก่อน
+                if (useLocalAudio && localAudio) {
+                    localAudio.play().catch(() => playViaYouTube());
+                } else {
+                    playViaYouTube();
+                }
             } else {
                 isPlaying = false;
-                clearInterval(melodyInterval);
                 vinyl.classList.remove('spin-vinyl');
                 label.textContent = "เปิดเพลงคลอเบาๆ";
+
+                if (localAudio) {
+                    localAudio.pause();
+                }
+                if (ytPlayer && ytPlayer.pauseVideo) {
+                    try { ytPlayer.pauseVideo(); } catch (e) { }
+                }
+            }
+        }
+
+        function playViaYouTube() {
+            if (ytPlayer && ytPlayer.playVideo) {
+                try {
+                    ytPlayer.playVideo();
+                } catch (e) {
+                    console.error("YouTube play error:", e);
+                }
             }
         }
         // นำ URL เว็บแอปจาก Google Apps Script มาวางตรงนี้
