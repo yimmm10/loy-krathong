@@ -309,7 +309,7 @@
                     class="w-full bg-slate-800/80 text-amber-50 placeholder-slate-400 font-hand text-base rounded-xl p-3.5 border border-slate-700 focus:outline-none focus:border-amber-400 transition-colors resize-none"></textarea>
 
                 <div class="flex items-center justify-between mt-3">
-                    <span class="text-xs text-slate-400 font-hand">* ลอยได้เรื่อยๆ เลยนะ</span>
+                    <span class="text-xs text-slate-400 font-hand">* อยากลอยกระทงกับหนูทุกปีเลยนะ</span>
                     <button onclick="launchKrathong()"
                         class="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-hand font-bold px-6 py-2.5 rounded-full shadow-glow transition-all active:scale-95 flex items-center gap-2 cursor-pointer">
                         <span>ปล่อยกระทงลงน้ำ</span>
@@ -331,7 +331,7 @@
                 class="krathong-bob absolute bottom-12 left-8 sm:left-20 flex flex-col items-center">
                 <div
                     class="bg-slate-900/80 backdrop-blur-sm border border-amber-400/30 text-amber-200 font-hand text-xs px-3 py-1 rounded-full mb-2 shadow-md whitespace-nowrap">
-                    "ขอให้เธอมีความสุขในทุกๆ วันนะ 💛"
+                    "ขอให้เธอมีความสุขในทุกๆ วันนะ 💜"
                 </div>
                 <!-- SVG กระทงใบตอง -->
                 <svg class="w-24 h-20 drop-shadow-[0_8px_15px_rgba(251,191,36,0.35)]" viewBox="0 0 120 100" fill="none">
@@ -376,7 +376,7 @@
 
             <!-- ข้อความท้ายเว็บ -->
             <div class="absolute bottom-3 w-full text-center text-xs text-slate-400/70 font-hand">
-                Made with 💛 just for you
+                Made with 💜 just for you
             </div>
         </div>
     </section>
@@ -419,14 +419,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Hidden iframe & form สำหรับส่งข้อมูลเข้า Google Sheets แบบไม่ติด CORS 100% -->
-    <iframe name="hidden_krathong_iframe" id="hidden_krathong_iframe" src="about:blank" style="display:none;"></iframe>
-    <form id="krathongForm"
-        action="https://script.google.com/macros/s/AKfycbzlH5GvvGDuZBN8e9oH9uY6UcEtnMvzTcdWW-_jRAMP_e8k49iHN6mdT0UdqPbJbJ-E_g/exec"
-        method="POST" target="hidden_krathong_iframe" style="display:none;">
-        <input type="hidden" name="wish" id="krathongWishField">
-    </form>
 
     <!-- ==========================================
        JAVASCRIPT: ตั้งค่ารูปภาพ ข้อความ และอนิเมชัน
@@ -749,27 +741,16 @@
 
             // 1. ส่งคำอธิษฐานไปเก็บใน Google Sheets แบบเบื้องหลัง
             if (GOOGLE_SCRIPT_URL) {
-                // ส่งผ่าน Form เข้า Hidden iframe (รองรับทั้งเปิดในเครื่องและบนเว็บ ไม่ติดปัญหา CORS 100%)
-                try {
-                    const form = document.getElementById('krathongForm');
-                    const field = document.getElementById('krathongWishField');
-                    if (form && field) {
-                        form.action = GOOGLE_SCRIPT_URL;
-                        field.value = wishText;
-                        form.submit();
-                    }
-                } catch (e) {
-                    console.error("Form submit error:", e);
-                }
+                const params = new URLSearchParams();
+                params.append('wish', wishText);
 
-                // สำรองด้วย fetch
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: {
-                        'Content-Type': 'text/plain;charset=utf-8',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: JSON.stringify({ wish: wishText })
+                    body: params.toString()
                 }).catch(err => console.error("Save error:", err));
             }
 
