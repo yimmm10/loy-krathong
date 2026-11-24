@@ -305,12 +305,12 @@
 
             <!-- ฟอร์มพิมพ์คำอธิษฐาน -->
             <div class="mt-6 bg-slate-900/75 backdrop-blur-md border border-amber-400/25 p-5 rounded-2xl shadow-xl">
-                <textarea id="wishInput" rows="2" maxlength="120"
+                <textarea id="wishInput" rows="3" maxlength="500"
                     placeholder="เช่น ขอให้เราได้ไปเที่ยวด้วยกันอีกเยอะๆ อยู่ข้างกันไปนานๆ นะ..."
                     class="w-full bg-slate-800/80 text-amber-50 placeholder-slate-400 font-hand text-base rounded-xl p-3.5 border border-slate-700 focus:outline-none focus:border-amber-400 transition-colors resize-none"></textarea>
 
                 <div class="flex items-center justify-between mt-3">
-                    <span class="text-xs text-slate-400 font-hand">* อยากลอยกระทงกับหนูทุกปีเลยนะ</span>
+                    <span class="text-xs text-slate-400 font-hand">* อยากลอยกระทงกับหนูทุกปีเลยนะ (สูงสุด 500 ตัวอักษร)</span>
                     <button onclick="launchKrathong()"
                         class="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-hand font-bold px-6 py-2.5 rounded-full shadow-glow transition-all active:scale-95 flex items-center gap-2 cursor-pointer">
                         <span>ปล่อยกระทงลงน้ำ</span>
@@ -955,7 +955,7 @@
             wrapper.style.bottom = `${randomBottom}px`;
 
             wrapper.innerHTML = `
-    <div class="bg-amber-50/95 text-slate-900 font-hand text-xs sm:text-sm font-semibold px-3.5 py-1.5 rounded-full mb-1.5 shadow-lg border border-amber-300 max-w-[220px] truncate">
+    <div class="bg-amber-50/95 text-slate-900 font-hand text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-1.5 shadow-lg border border-amber-300 max-w-[280px] sm:max-w-[340px] truncate text-center">
       "${escapeHTML(wishText)}"
     </div>
     <div class="krathong-bob">
