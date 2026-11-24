@@ -513,15 +513,16 @@
             card.style.transform = `rotate(${item.rotate})`;
             card.onclick = () => openModal(index);
 
-            const isVid = isVideoFile(item.image);
+            const fileUrl = item.video || item.media || item.image;
+            const isVid = isVideoFile(fileUrl);
             const mediaTag = isVid
                 ? `<div class="relative w-full h-full">
-                     <video src="${item.image}" autoplay loop muted playsinline class="w-full h-full object-cover transition-transform duration-500 hover:scale-105 pointer-events-none"></video>
+                     <video src="${fileUrl}" autoplay loop muted playsinline class="w-full h-full object-cover transition-transform duration-500 hover:scale-105 pointer-events-none"></video>
                      <span class="absolute bottom-2 right-2 bg-slate-900/70 text-amber-300 text-[10px] font-sans px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
                        ▶ วิดีโอ
                      </span>
                    </div>`
-                : `<img src="${item.image}" alt="${item.caption}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">`;
+                : `<img src="${fileUrl}" alt="${item.caption}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">`;
 
             card.innerHTML = `
         <div class="washi-tape ${item.tapeColor}"></div>
@@ -547,19 +548,20 @@
 
         function openModal(index) {
             const item = memories[index];
-            const isVid = isVideoFile(item.image);
+            const fileUrl = item.video || item.media || item.image;
+            const isVid = isVideoFile(fileUrl);
 
             if (isVid) {
                 modalImg.classList.add('hidden');
                 modalImg.src = "";
-                modalVideo.src = item.image;
+                modalVideo.src = fileUrl;
                 modalVideo.classList.remove('hidden');
                 modalVideo.play().catch(() => {});
             } else {
                 modalVideo.classList.add('hidden');
                 modalVideo.pause();
                 modalVideo.src = "";
-                modalImg.src = item.image;
+                modalImg.src = fileUrl;
                 modalImg.classList.remove('hidden');
             }
 
