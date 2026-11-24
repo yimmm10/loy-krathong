@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ลอยกระทงด้วยกันนะ 🌕✨</title>
+
+    <!-- Google Fonts: Mali (ลายมือสุดน่ารัก) & IBM Plex Sans Thai (อ่านง่าย สบายตา) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Mali:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        hand: ['Mali', 'cursive'],
+                        sans: ['IBM Plex Sans Thai', 'sans-serif'],
+                    },
+                    colors: {
+                        midnight: '#0B1120',
+                        twilight: '#162238',
+                        paper: '#FEFCE8',
+                        paperDark: '#FEF3C7',
+                        candle: '#FBBF24',
+                        amberWarm: '#F59E0B',
+                    },
+                    boxShadow: {
+                        'polaroid': '0 12px 30px -6px rgba(0, 0, 0, 0.55), 0 4px 10px -2px rgba(0, 0, 0, 0.35)',
+                        'glow': '0 0 25px rgba(251, 191, 36, 0.45)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* พื้นหลังท้องฟ้ายามค่ำคืนและผิวน้ำ */
+        body {
+            background: linear-gradient(180deg, #070B14 0%, #0F172A 40%, #17253D 80%, #0C1524 100%);
+            color: #F8FAFC;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* กระดาษโน้ตและกรอบโพลารอยด์ (Texture เบาๆ) */
+        .polaroid-card {
+            background-color: #FEFCE8;
+            background-image: radial-gradient(#E5DEC9 0.5px, transparent 0.5px);
+            background-size: 12px 12px;
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+        }
+
+        .polaroid-card:hover {
+            transform: scale(1.04) rotate(0deg) !important;
+            z-index: 20;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(251, 191, 36, 0.25);
+        }
+
+        /* เทปกาว Washi Tape แปะรูป */
+        .washi-tape {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            width: 96px;
+            height: 26px;
+            background: rgba(251, 191, 36, 0.45);
+            backdrop-filter: blur(2px);
+            border-left: 2px dashed rgba(255, 255, 255, 0.35);
+            border-right: 2px dashed rgba(255, 255, 255, 0.35);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .washi-tape.pink {
+            background: rgba(244, 114, 182, 0.4);
+            transform: translateX(-50%) rotate(2.5deg);
+        }
+
+        .washi-tape.blue {
+            background: rgba(96, 165, 250, 0.4);
+            transform: translateX(-50%) rotate(-1.5deg);
+        }
+
+        /* อนิเมชันแสงเทียนสั่นไหว */
+        @keyframes flicker {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(-1deg);
+                opacity: 0.95;
+            }
+
+            25% {
+                transform: scale(1.06, 0.96) rotate(1.5deg);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(0.95, 1.05) rotate(-1.5deg);
+                opacity: 0.88;
+            }
+
+            75% {
+                transform: scale(1.03, 0.98) rotate(1deg);
+                opacity: 0.98;
+            }
+        }
+
+        .candle-flame {
+            transform-origin: bottom center;
+            animation: flicker 2.2s infinite ease-in-out;
+        }
+
+        /* อนิเมชันกระทงลอยโคลงเคลงบนผิวน้ำ */
+        @keyframes bobbing {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(-1.5deg);
+            }
+
+            50% {
+                transform: translateY(-6px) rotate(1.5deg);
+            }
+        }
+
+        .krathong-bob {
+            animation: bobbing 3.8s infinite ease-in-out;
+        }
+
+        /* อนิเมชันกระทงลอยออกไปไกล */
+        @keyframes floatAway {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+
+            40% {
+                transform: translate(25vw, -18px) scale(0.85) rotate(2deg);
+                opacity: 0.95;
+            }
+
+            100% {
+                transform: translate(85vw, -45px) scale(0.45) rotate(-2deg);
+                opacity: 0;
+            }
+        }
+
+        .krathong-floating-away {
+            animation: floatAway 14s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        /* อนิเมชันแผ่นเสียงหมุน */
+        @keyframes spinSlow {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spin-vinyl {
+            animation: spinSlow 6s linear infinite;
+        }
+
+        /* ระลอกคลื่นผิวน้ำ */
+        .water-surface {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(12, 24, 44, 0.85) 40%, #060D1A 100%);
+            border-top: 1px solid rgba(251, 191, 36, 0.18);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0B1120;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+
+<body class="font-sans antialiased selection:bg-amber-400/30 selection:text-amber-200">
+
+    <!-- Canvas ท้องฟ้า ดวงดาว โคมลอย และหิ่งห้อย -->
+    <canvas id="skyCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+    <!-- ปุ่มเปิด/ปิดเพลงบรรเลง (มุมขวาบน) -->
+    <div class="fixed top-4 right-4 z-40 flex items-center gap-2">
+        <button id="musicToggle" onclick="toggleMusic()"
+            class="group flex items-center gap-2.5 bg-slate-900/75 hover:bg-slate-800/90 backdrop-blur-md border border-amber-400/30 text-amber-100 px-3.5 py-2 rounded-full shadow-lg transition-all active:scale-95">
+            <div id="vinylIcon"
+                class="w-6 h-6 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-slate-900 shadow-inner">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+                </svg>
+            </div>
+            <span id="musicLabel" class="text-xs font-medium tracking-wide pr-1">เปิดเพลงคลอเบาๆ</span>
+        </button>
+    </div>
+
+    <!-- ==========================================
+       SECTION 1: HERO & จดหมายเปิดใจ
+  =========================================== -->
+    <header
+        class="relative z-10 min-h-screen flex flex-col justify-between pt-20 pb-10 px-5 max-w-4xl mx-auto text-center">
+
+        <!-- ดวงจันทร์เต็มดวง -->
+        <div class="mx-auto mb-6 relative">
+            <div
+                class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-amber-100 via-yellow-200 to-amber-400 shadow-[0_0_60px_rgba(251,191,36,0.55)] mx-auto flex items-center justify-center relative overflow-hidden">
+                <!-- ลายพื้นผิวดวงจันทร์เบาๆ -->
+                <div class="w-6 h-6 rounded-full bg-amber-300/40 absolute top-4 left-5"></div>
+                <div class="w-4 h-4 rounded-full bg-amber-400/30 absolute bottom-6 right-6"></div>
+                <div class="w-8 h-8 rounded-full bg-amber-300/25 absolute top-10 right-3"></div>
+            </div>
+        </div>
+
+        <!-- ข้อความต้อนรับ & จดหมายสั้นๆ -->
+        <div class="space-y-4 my-auto">
+
+
+            <h1 id="heroTitle"
+                class="font-hand text-3xl sm:text-5xl md:text-6xl font-bold text-amber-50 leading-tight drop-shadow-md">
+                สุขสันต์วันลอยกระทงนะ <span id="gfNameDisplay"
+                    class="whitespace-nowrap inline-block text-amber-300 underline decoration-wavy decoration-amber-400/60 underline-offset-8">คนเก่ง</span>
+            </h1>
+
+            <!-- กล่องกระดาษโน้ตจดหมายเปิดเรื่อง -->
+            <div
+                class="max-w-xl mx-auto mt-6 bg-paper text-slate-800 p-6 sm:p-8 rounded-2xl shadow-polaroid relative transform -rotate-1 border border-amber-200/80 text-left">
+                <div class="washi-tape"></div>
+                <p id="openingLetter" class="font-hand text-base sm:text-lg leading-relaxed text-slate-700">
+                    "ปีนี้ไม่รู้ว่าเราจะได้ไปเบียดคนตามงานวัด หรือแค่นั่งมองพระจันทร์ด้วยกันเงียบๆ แต่อยากทำพื้นที่เล็กๆ
+                    ตรงนี้ไว้เก็บความทรงจำน่ารักๆ ของเราสองคน ขอบคุณที่คอยอยู่ข้างๆ และไปเที่ยวด้วยกันในทุกๆ
+                    ที่เลยนะ..."
+                </p>
+                <p id="senderSign" class="font-hand text-right text-amber-700 font-semibold mt-4 text-sm sm:text-base">
+                    — จากคนที่รักเธอที่สุด 💛
+                </p>
+            </div>
+        </div>
+
+        <!-- ปุ่มเลื่อนลงดูรูป -->
+        <div class="pt-10">
+            <a href="#memories"
+                class="inline-flex flex-col items-center text-amber-200/80 hover:text-amber-200 transition-colors group">
+                <span class="font-hand text-sm mb-2">เลื่อนลงไปดูความทรงจำของเรา</span>
+                <div
+                    class="w-8 h-8 rounded-full border border-amber-300/40 flex items-center justify-center group-hover:translate-y-1 transition-transform">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- ==========================================
+       SECTION 2: SCRAPBOOK GALLERY (รวมรูปคู่)
+  =========================================== -->
+    <section id="memories" class="relative z-10 py-16 px-5 max-w-6xl mx-auto">
+        <div class="text-center mb-14 space-y-2">
+            <h2 class="font-hand text-3xl sm:text-4xl font-bold text-amber-200">
+                สมุดภาพความทรงจำของเรา 📸
+            </h2>
+            <p class="text-slate-300 text-sm sm:text-base max-w-md mx-auto">
+                ลองกดที่รูปแต่ละใบดูนะ มีข้อความเล็กๆ ซ่อนอยู่ข้างหลังด้วย
+            </p>
+        </div>
+
+        <!-- Grid การ์ดรูปภาพโพลารอยด์ (Generate จาก JS) -->
+        <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 px-2 sm:px-6">
+            <!-- รูปภาพจะถูกแทรกที่นี่อัตโนมัติ -->
+        </div>
+    </section>
+
+    <!-- ==========================================
+       SECTION 3: ลอยกระทงอธิษฐานด้วยกัน (INTERACTIVE RIVER)
+  =========================================== -->
+    <section id="riverSection" class="relative z-10 pt-16 pb-0 mt-12">
+        <div class="max-w-xl mx-auto px-5 text-center mb-8">
+            <span class="text-2xl">🪷</span>
+            <h2 class="font-hand text-3xl sm:text-4xl font-bold text-amber-200 mt-1">
+                มาลอยกระทงด้วยกันนะ
+            </h2>
+            <p class="text-slate-300 text-sm sm:text-base mt-2">
+                พิมพ์คำอธิษฐานสำหรับเราสองคน แล้วปล่อยกระทงลงแม่น้ำไปด้วยกัน
+            </p>
+
+            <!-- ฟอร์มพิมพ์คำอธิษฐาน -->
+            <div class="mt-6 bg-slate-900/75 backdrop-blur-md border border-amber-400/25 p-5 rounded-2xl shadow-xl">
+                <textarea id="wishInput" rows="2" maxlength="120"
+                    placeholder="เช่น ขอให้เราได้ไปเที่ยวด้วยกันอีกเยอะๆ อยู่ข้างกันไปนานๆ นะ..."
+                    class="w-full bg-slate-800/80 text-amber-50 placeholder-slate-400 font-hand text-base rounded-xl p-3.5 border border-slate-700 focus:outline-none focus:border-amber-400 transition-colors resize-none"></textarea>
+
+                <div class="flex items-center justify-between mt-3">
+                    <span class="text-xs text-slate-400 font-hand">* ลอยได้เรื่อยๆ เลยนะ</span>
+                    <button onclick="launchKrathong()"
+                        class="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-950 font-hand font-bold px-6 py-2.5 rounded-full shadow-glow transition-all active:scale-95 flex items-center gap-2 cursor-pointer">
+                        <span>ปล่อยกระทงลงน้ำ</span>
+                        <span>✨</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- พื้นที่ผิวน้ำสำหรับกระทงลอย -->
+        <div id="riverCanvas" class="water-surface relative w-full h-72 sm:h-80 overflow-hidden mt-8 select-none">
+            <!-- แสงจันทร์สะท้อนผิวน้ำ -->
+            <div
+                class="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-full bg-gradient-to-b from-amber-300/15 via-amber-400/5 to-transparent blur-xl pointer-events-none">
+            </div>
+
+            <!-- กระทงตั้งต้นที่ลอยรออยู่ริมตลิ่ง -->
+            <div id="starterKrathong"
+                class="krathong-bob absolute bottom-12 left-8 sm:left-20 flex flex-col items-center">
+                <div
+                    class="bg-slate-900/80 backdrop-blur-sm border border-amber-400/30 text-amber-200 font-hand text-xs px-3 py-1 rounded-full mb-2 shadow-md whitespace-nowrap">
+                    "ขอให้เธอมีความสุขในทุกๆ วันนะ 💛"
+                </div>
+                <!-- SVG กระทงใบตอง -->
+                <svg class="w-24 h-20 drop-shadow-[0_8px_15px_rgba(251,191,36,0.35)]" viewBox="0 0 120 100" fill="none">
+                    <!-- แสงรัศมีเทียน -->
+                    <circle cx="60" cy="24" r="18" fill="url(#candleGlow)" opacity="0.7" />
+                    <!-- เปลวเทียน -->
+                    <path class="candle-flame" d="M60 12 C64 20, 65 26, 60 28 C55 26, 56 20, 60 12 Z" fill="#FDE047" />
+                    <path class="candle-flame" d="M60 16 C62 21, 62 25, 60 26 C58 25, 58 21, 60 16 Z" fill="#FFFFFF" />
+                    <!-- ธูป & เทียน -->
+                    <rect x="58.5" y="28" width="3" height="22" rx="1.5" fill="#FBBF24" />
+                    <line x1="53" y1="22" x2="55" y2="50" stroke="#A8A29E" stroke-width="1.2" />
+                    <line x1="67" y1="22" x2="65" y2="50" stroke="#A8A29E" stroke-width="1.2" />
+                    <circle cx="53" cy="22" r="1.5" fill="#EF4444" />
+                    <circle cx="67" cy="22" r="1.5" fill="#EF4444" />
+                    <!-- ดอกไม้ตกแต่ง -->
+                    <circle cx="44" cy="52" r="6" fill="#F472B6" />
+                    <circle cx="76" cy="52" r="6" fill="#F472B6" />
+                    <circle cx="60" cy="50" r="7" fill="#FB7185" />
+                    <circle cx="60" cy="50" r="2.5" fill="#FDE047" />
+                    <!-- กลีบใบตองชั้นบน -->
+                    <path d="M25 60 L35 44 L45 60 Z" fill="#15803D" />
+                    <path d="M40 60 L50 42 L60 60 Z" fill="#16A34A" />
+                    <path d="M60 60 L70 42 L80 60 Z" fill="#16A34A" />
+                    <path d="M75 60 L85 44 L95 60 Z" fill="#15803D" />
+                    <!-- ฐานกระทงใบตอง -->
+                    <path d="M18 60 H102 L92 78 C90 82, 30 82, 28 78 L18 60 Z" fill="#166534" />
+                    <path d="M20 64 H100" stroke="#4ADE80" stroke-width="1.5" stroke-dasharray="4 3" />
+                    <!-- เงาสะท้อนบนผิวน้ำ -->
+                    <ellipse cx="60" cy="84" rx="42" ry="4" fill="#FBBF24" opacity="0.22" />
+                    <defs>
+                        <radialGradient id="candleGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(60 24) scale(18)">
+                            <stop stop-color="#FDE047" />
+                            <stop offset="1" stop-color="#FDE047" stop-opacity="0" />
+                        </radialGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- พื้นที่สำหรับกระทงที่ถูกปล่อยใหม่ -->
+            <div id="floatingKrathongsContainer" class="inset-0 pointer-events-none"></div>
+
+            <!-- ข้อความท้ายเว็บ -->
+            <div class="absolute bottom-3 w-full text-center text-xs text-slate-400/70 font-hand">
+                Made with 💛 just for you
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+       MODAL: LIGHTBOX อ่านข้อความลับหลังรูป
+  =========================================== -->
+    <div id="photoModal" onclick="closeModal(event)"
+        class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div id="modalContent" onclick="event.stopPropagation()"
+            class="bg-paper text-slate-800 max-w-lg w-full rounded-2xl p-5 sm:p-7 shadow-2xl relative transform scale-95 transition-transform duration-300 border-2 border-amber-200">
+            <!-- ปุ่มปิด -->
+            <button onclick="closeModal()"
+                class="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-slate-900 text-amber-200 hover:bg-amber-400 hover:text-slate-950 flex items-center justify-center shadow-lg transition-colors cursor-pointer">
+                ✕
+            </button>
+
+            <!-- รูปขนาดใหญ่ -->
+            <div class="rounded-xl overflow-hidden bg-slate-200 aspect-[4/3] shadow-inner">
+                <img id="modalImg" src="" alt="Memory" class="w-full h-full object-cover">
+            </div>
+
+            <!-- รายละเอียด & ข้อความในใจ -->
+            <div class="mt-5 space-y-2">
+                <div class="flex items-center justify-between text-xs text-amber-700 font-semibold">
+                    <span id="modalLocation">📍 สถานที่</span>
+                    <span id="modalDate">🗓️ วันที่</span>
+                </div>
+                <h3 id="modalCaption" class="font-hand text-xl sm:text-2xl font-bold text-slate-900">
+                    ชื่อภาพ
+                </h3>
+                <div class="pt-2 border-t border-amber-900/10">
+                    <p id="modalSecretNote" class="font-hand text-base text-slate-700 leading-relaxed">
+                        ข้อความลับหลังรูป...
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+       JAVASCRIPT: ตั้งค่ารูปภาพ ข้อความ และอนิเมชัน
+       (แก้ไขข้อมูลของคู่คุณได้ตรงนี้เลยครับ!)
+  =========================================== -->
+    <script>
+        // 1. ตั้งค่าข้อความส่วนตัว
+        const CONFIG = {
+            girlfriendName: "น้องเอย", // เปลี่ยนเป็นชื่อเล่นแฟนได้เลย เช่น "เตง" หรือ "หมูอ้วน"
+            openingLetter: "ปีนี้ไม่รู้ว่าเราจะได้ไปเบียดคนตามงานวัด หรือแค่นั่งมองพระจันทร์ด้วยกันเงียบๆ แต่อยากทำพื้นที่เล็กๆ ตรงนี้ไว้เก็บความทรงจำน่ารักๆ ของเราสองคน ขอบคุณที่คอยอยู่ข้างๆ และไปเที่ยวด้วยกันในทุกๆ ที่เลยนะ...",
+            senderSignature: "— จากคนที่รักเธอที่สุด 💛"
+        };
+
+        // 2. รายการรูปภาพและข้อความลับ (นำลิงก์รูปคู่ของคุณมาวางแทนที่ image URL ได้เลย)
+        const memories = [
+            {
+                image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80",
+                caption: "เจอกันครั้งแรก",
+                date: "21 ต.ค. 2026",
+                location: "ม.แม่โจ้",
+                rotate: "-2deg",
+                tapeColor: "",
+                secretNote: "จำได้ว่าวันนั้นตื่นเต้นมาก กลัวพาเธอหลงทางสุดๆ แต่พอเห็นเธอยิ้มแล้วก็หายเหนื่อยเลย เป็นจุดเริ่มต้นที่ดีมากๆ ของเรา"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80",
+                caption: "ทริปแรกที่เราไปด้วยกัน",
+                date: "21 ต.ค. 2026",
+                location: "แม่กำปอง",
+                rotate: "1.8deg",
+                tapeColor: "pink",
+                secretNote: "ชอบเวลาเธอเผลอๆ แบบนี้ที่สุดเลย ดูเป็นธรรมชาติและน่ารักมากๆ อยากเก็บโมเมนต์แบบนี้ไว้ดูไปเรื่อยๆ เลนะ"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80",
+                caption: "มื้ออร่อยกับคนพิเศษ",
+                date: "28 มิ.ย. 2025",
+                location: "ข----",
+                rotate: "-1.5deg",
+                tapeColor: "blue",
+                secretNote: "ไม่ว่าจะไปกินร้านไหน ถ้าได้นั่งกินข้างๆ เธอ อาหารธรรมดาก็อร่อยขึ้นอีกสิบเท่าเลย (โดยเฉพาะตอนแย่งเธอกิน 555)"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=800&q=80",
+                caption: "เดินเล่นรับลมหนาว",
+                date: "19 ต.ค. 2025",
+                location: "ข----",
+                rotate: "2.2deg",
+                tapeColor: "",
+                secretNote: "อากาศวันนั้นหนาวมาก แต่มือเธออุ่นที่สุดเลย ขอบคุณที่ยอมตื่นเช้าไปดูพระอาทิตย์ขึ้นด้วยกันนะ"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80",
+                caption: "รอยยิ้มที่ชอบที่สุด",
+                date: "05 พ.ย. 2025",
+                location: "ข----",
+                rotate: "-2.2deg",
+                tapeColor: "pink",
+                secretNote: "ขอให้เธอยิ้มสดใสแบบนี้ในทุกๆ วันเลยนะ ถ้าวันไหนเหนื่อยหรือท้อ หันมาก็จะเจอเราอยู่ข้างๆ เสมอ"
+            },
+            {
+                image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?auto=format&fit=crop&w=800&q=80",
+                caption: "คืนลอยกระทงปีนี้",
+                date: "ลอยกระทง 2026",
+                location: "ข----",
+                rotate: "1.2deg",
+                tapeColor: "blue",
+                secretNote: "ปีนี้และปีต่อๆ ไป ก็ขอจองตัวเธอไปลอยกระทงด้วยกันทุกปีเลยนะ ห้ามหนีไปไหนเด็ดขาด!"
+            }
+        ];
+
+        // นำค่า CONFIG มาแสดงผล
+        document.getElementById('gfNameDisplay').textContent = CONFIG.girlfriendName;
+        document.getElementById('openingLetter').textContent = `"${CONFIG.openingLetter}"`;
+        document.getElementById('senderSign').textContent = CONFIG.senderSignature;
+
+        // สร้างการ์ด Polaroid ในแกลเลอรี
+        const galleryGrid = document.getElementById('galleryGrid');
+        memories.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = `polaroid-card p-3.5 pb-6 rounded-xl shadow-polaroid cursor-pointer relative select-none`;
+            card.style.transform = `rotate(${item.rotate})`;
+            card.onclick = () => openModal(index);
+
+            card.innerHTML = `
+        <div class="washi-tape ${item.tapeColor}"></div>
+        <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-200 mb-3.5">
+          <img src="${item.image}" alt="${item.caption}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+        </div>
+        <div class="px-1">
+          <p class="font-hand text-lg font-bold text-slate-800 leading-snug">${item.caption}</p>
+          <div class="flex items-center justify-between text-xs text-slate-500 mt-2 font-medium">
+            <span>📍 ${item.location}</span>
+            <span>${item.date}</span>
+          </div>
+        </div>
+      `;
+            galleryGrid.appendChild(card);
+        });
+
+        // ระบบเปิด-ปิด Modal Lightbox
+        const modal = document.getElementById('photoModal');
+        const modalContent = document.getElementById('modalContent');
+
+        function openModal(index) {
+            const item = memories[index];
+            document.getElementById('modalImg').src = item.image;
+            document.getElementById('modalLocation').textContent = `📍 ${item.location}`;
+            document.getElementById('modalDate').textContent = `🗓️ ${item.date}`;
+            document.getElementById('modalCaption').textContent = item.caption;
+            document.getElementById('modalSecretNote').textContent = `"${item.secretNote}"`;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            });
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        // ฟังก์ชันแปลงข้อความป้องกัน XSS
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+            }[tag]));
+        }
+
+        // ==========================================
+        // CANVAS ANIMATION: ดวงดาว โคมลอย และหิ่งห้อย
+        // ==========================================
+        const canvas = document.getElementById('skyCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars = [];
+        let lanterns = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // สร้างดวงดาวระยิบระยับ
+        for (let i = 0; i < 65; i++) {
+            stars.push({
+                x: Math.random() * width,
+                y: Math.random() * (height * 0.75),
+                r: Math.random() * 1.6 + 0.4,
+                alpha: Math.random(),
+                speed: Math.random() * 0.015 + 0.005
+            });
+        }
+
+        // สร้างโคมลอยยี่เป็งลอยขึ้นช้าๆ
+        for (let i = 0; i < 14; i++) {
+            lanterns.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 10 + 8,
+                speedY: Math.random() * 0.35 + 0.15,
+                drift: Math.random() * 0.4 - 0.2,
+                opacity: Math.random() * 0.45 + 0.25
+            });
+        }
+
+        function animateSky() {
+            ctx.clearRect(0, 0, width, height);
+
+            // วาดดาว
+            stars.forEach(s => {
+                s.alpha += s.speed;
+                if (s.alpha > 1 || s.alpha < 0.2) s.speed = -s.speed;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(254, 249, 195, ${s.alpha})`;
+                ctx.fill();
+            });
+
+            // วาดโคมลอย
+            lanterns.forEach(l => {
+                l.y -= l.speedY;
+                l.x += Math.sin(l.y * 0.01) * 0.25 + l.drift;
+                if (l.y < -30) {
+                    l.y = height + 20;
+                    l.x = Math.random() * width;
+                }
+
+                // แสงฟุ้งรอบโคม
+                const grad = ctx.createRadialGradient(l.x, l.y, 1, l.x, l.y, l.size * 2.2);
+                grad.addColorStop(0, `rgba(251, 191, 36, ${l.opacity})`);
+                grad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(l.x, l.y, l.size * 2.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // ตัวโคมทรงสี่เหลี่ยมมน
+                ctx.fillStyle = `rgba(253, 224, 71, ${l.opacity + 0.2})`;
+                ctx.beginPath();
+                ctx.roundRect(l.x - l.size * 0.45, l.y - l.size * 0.6, l.size * 0.9, l.size * 1.1, 3);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animateSky);
+        }
+        animateSky();
+
+        // ==========================================
+        // WEB AUDIO API: เสียงดนตรีกล่องดนตรีเบาๆ (ไม่ต้องใช้ไฟล์ mp3)
+        // ==========================================
+        let audioCtx = null;
+        let isPlaying = false;
+        let melodyInterval = null;
+
+        // โน้ตเพลงทำนองอบอุ่น (Pentatonic Music Box)
+        const notes = [523.25, 587.33, 659.25, 783.99, 880.00, 783.99, 659.25, 587.33];
+        let noteIndex = 0;
+
+        function playSoftNote(freq) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.045, audioCtx.currentTime + 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1.85);
+        }
+
+        function toggleMusic() {
+            const vinyl = document.getElementById('vinylIcon');
+            const label = document.getElementById('musicLabel');
+
+            if (!isPlaying) {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                isPlaying = true;
+                vinyl.classList.add('spin-vinyl');
+                label.textContent = "กำลังเล่นเพลงคลอ...";
+                playSoftNote(notes[noteIndex++ % notes.length]);
+                melodyInterval = setInterval(() => {
+                    playSoftNote(notes[noteIndex++ % notes.length]);
+                }, 950);
+            } else {
+                isPlaying = false;
+                clearInterval(melodyInterval);
+                vinyl.classList.remove('spin-vinyl');
+                label.textContent = "เปิดเพลงคลอเบาๆ";
+            }
+        }
+        // นำ URL เว็บแอปจาก Google Apps Script มาวางตรงนี้
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwiKFRN5kTTxGbA6dan4EyIV5lOCpUTE9s4eL6Fu-7a1S_hyppOz3dF8CfhiqKUlU2mtQ/exec";
+
+        function launchKrathong() {
+            const input = document.getElementById('wishInput');
+            const wishText = input.value.trim() || "ขอให้เราสองคนรักกันนานๆ และมีความสุขด้วยกันตลอดไป ✨";
+
+            // 1. ส่งคำอธิษฐานไปเก็บใน Google Sheets แบบเบื้องหลัง
+            if (GOOGLE_SCRIPT_URL) {
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // ป้องกันการติด CORS ของเบราว์เซอร์
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify({ wish: wishText })
+                }).catch(err => console.error("Save error:", err));
+            }
+
+            // 2. สร้างกระทงลอยบนหน้าจอ (โค้ดเดิม)
+            const container = document.getElementById('floatingKrathongsContainer');
+            const wrapper = document.createElement('div');
+            const randomBottom = Math.floor(Math.random() * 110) + 45;
+            wrapper.className = "krathong-floating-away absolute left-6 flex flex-col items-center z-20";
+            wrapper.style.bottom = `${randomBottom}px`;
+
+            wrapper.innerHTML = `
+    <div class="bg-amber-50/95 text-slate-900 font-hand text-xs sm:text-sm font-semibold px-3.5 py-1.5 rounded-full mb-1.5 shadow-lg border border-amber-300 max-w-[220px] truncate">
+      "${escapeHTML(wishText)}"
+    </div>
+    <div class="krathong-bob">
+      <svg class="w-20 h-16 sm:w-24 sm:h-20 drop-shadow-[0_6px_14px_rgba(251,191,36,0.5)]" viewBox="0 0 120 100" fill="none">
+        <circle cx="60" cy="24" r="18" fill="#FDE047" opacity="0.35"/>
+        <path class="candle-flame" d="M60 12 C64 20, 65 26, 60 28 C55 26, 56 20, 60 12 Z" fill="#FDE047"/>
+        <rect x="58.5" y="28" width="3" height="22" rx="1.5" fill="#FBBF24"/>
+        <circle cx="44" cy="52" r="6" fill="#F472B6"/>
+        <circle cx="76" cy="52" r="6" fill="#F472B6"/>
+        <circle cx="60" cy="50" r="7" fill="#FB7185"/>
+        <path d="M25 60 L35 44 L45 60 Z" fill="#15803D"/>
+        <path d="M40 60 L50 42 L60 60 Z" fill="#16A34A"/>
+        <path d="M60 60 L70 42 L80 60 Z" fill="#16A34A"/>
+        <path d="M75 60 L85 44 L95 60 Z" fill="#15803D"/>
+        <path d="M18 60 H102 L92 78 C90 82, 30 82, 28 78 L18 60 Z" fill="#166534"/>
+        <ellipse cx="60" cy="84" rx="40" ry="4" fill="#FBBF24" opacity="0.25"/>
+      </svg>
+    </div>
+  `;
+
+            container.appendChild(wrapper);
+            input.value = "";
+
+            setTimeout(() => {
+                wrapper.remove();
+            }, 14500);
+        }
+    </script>
+</body>
+
+</html>
