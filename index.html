@@ -418,6 +418,12 @@
         </div>
     </div>
 
+    <!-- Hidden iframe & form สำหรับส่งข้อมูลเข้า Google Sheets แบบไม่ติด CORS 100% -->
+    <iframe name="hidden_krathong_iframe" id="hidden_krathong_iframe" style="display:none;"></iframe>
+    <form id="krathongForm" method="POST" target="hidden_krathong_iframe" style="display:none;">
+        <input type="hidden" name="wish" id="krathongWishField">
+    </form>
+
     <!-- ==========================================
        JAVASCRIPT: ตั้งค่ารูปภาพ ข้อความ และอนิเมชัน
        (แก้ไขข้อมูลของคู่คุณได้ตรงนี้เลยครับ!)
@@ -699,9 +705,23 @@
 
             // 1. ส่งคำอธิษฐานไปเก็บใน Google Sheets แบบเบื้องหลัง
             if (GOOGLE_SCRIPT_URL) {
+                // ส่งผ่าน Form เข้า Hidden iframe (รองรับทั้งเปิดในเครื่องและบนเว็บ ไม่ติดปัญหา CORS 100%)
+                try {
+                    const form = document.getElementById('krathongForm');
+                    const field = document.getElementById('krathongWishField');
+                    if (form && field) {
+                        form.action = GOOGLE_SCRIPT_URL;
+                        field.value = wishText;
+                        form.submit();
+                    }
+                } catch (e) {
+                    console.error("Form submit error:", e);
+                }
+
+                // สำรองด้วย fetch
                 fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // ป้องกันการติด CORS ของเบราว์เซอร์
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'text/plain;charset=utf-8',
                     },
