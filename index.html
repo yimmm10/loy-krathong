@@ -423,7 +423,9 @@
 
     <!-- Hidden iframe & form สำหรับส่งข้อมูลเข้า Google Sheets แบบไม่ติด CORS 100% -->
     <iframe name="hidden_krathong_iframe" id="hidden_krathong_iframe" src="about:blank" style="display:none;"></iframe>
-    <form id="krathongForm" action="https://script.google.com/macros/s/AKfycbzlH5GvvGDuZBN8e9oH9uY6UcEtnMvzTcdWW-_jRAMP_e8k49iHN6mdT0UdqPbJbJ-E_g/exec" method="POST" target="hidden_krathong_iframe" style="display:none;">
+    <form id="krathongForm"
+        action="https://script.google.com/macros/s/AKfycbzlH5GvvGDuZBN8e9oH9uY6UcEtnMvzTcdWW-_jRAMP_e8k49iHN6mdT0UdqPbJbJ-E_g/exec"
+        method="POST" target="hidden_krathong_iframe" style="display:none;">
         <input type="hidden" name="wish" id="krathongWishField">
     </form>
 
@@ -469,8 +471,8 @@
                 secretNote: "ไม่ว่าจะไปกินร้านไหน ถ้าได้นั่งกินข้างๆ เธอ อาหารธรรมดาก็อร่อยขึ้นอีกสิบเท่าเลย"
             },
             {
-                image: "./video/rabbit.MP4",
-                caption: "ไปสวนสันว์กัน",
+                image: "./video/zoo.MP4",
+                caption: "ไปสวนสัตว์กัน",
                 date: "23 ต.ค. 2026",
                 location: "สวนสัตว์เชียงใหม่",
                 rotate: "2.2deg",
