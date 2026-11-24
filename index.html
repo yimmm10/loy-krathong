@@ -396,9 +396,11 @@
             </button>
 
             <!-- รูปขนาดใหญ่ หรือ วิดีโอ -->
-            <div id="modalMediaContainer" class="rounded-xl overflow-hidden bg-slate-200 aspect-[4/3] shadow-inner relative flex items-center justify-center">
+            <div id="modalMediaContainer"
+                class="rounded-xl overflow-hidden bg-slate-200 aspect-[4/3] shadow-inner relative flex items-center justify-center">
                 <img id="modalImg" src="" alt="Memory" class="w-full h-full object-cover hidden">
-                <video id="modalVideo" src="" controls autoplay loop playsinline class="w-full h-full object-cover hidden"></video>
+                <video id="modalVideo" src="" controls autoplay loop playsinline
+                    class="w-full h-full object-cover hidden"></video>
             </div>
 
             <!-- รายละเอียด & ข้อความในใจ -->
@@ -420,8 +422,8 @@
     </div>
 
     <!-- Hidden iframe & form สำหรับส่งข้อมูลเข้า Google Sheets แบบไม่ติด CORS 100% -->
-    <iframe name="hidden_krathong_iframe" id="hidden_krathong_iframe" style="display:none;"></iframe>
-    <form id="krathongForm" method="POST" target="hidden_krathong_iframe" style="display:none;">
+    <iframe name="hidden_krathong_iframe" id="hidden_krathong_iframe" src="about:blank" style="display:none;"></iframe>
+    <form id="krathongForm" action="https://script.google.com/macros/s/AKfycbzlH5GvvGDuZBN8e9oH9uY6UcEtnMvzTcdWW-_jRAMP_e8k49iHN6mdT0UdqPbJbJ-E_g/exec" method="POST" target="hidden_krathong_iframe" style="display:none;">
         <input type="hidden" name="wish" id="krathongWishField">
     </form>
 
@@ -460,38 +462,38 @@
             {
                 image: "./picture/mae_kampong_food.JPEG",
                 caption: "มื้ออร่อยกับคนพิเศษ",
-                date: "21 มิ.ย. 2025",
+                date: "21 มิ.ย. 2026",
                 location: "แม่กำปอง",
                 rotate: "-1.5deg",
                 tapeColor: "blue",
-                secretNote: "ไม่ว่าจะไปกินร้านไหน ถ้าได้นั่งกินข้างๆ เธอ อาหารธรรมดาก็อร่อยขึ้นอีกสิบเท่าเลย (โดยเฉพาะตอนแย่งเธอกิน 555)"
+                secretNote: "ไม่ว่าจะไปกินร้านไหน ถ้าได้นั่งกินข้างๆ เธอ อาหารธรรมดาก็อร่อยขึ้นอีกสิบเท่าเลย"
             },
             {
                 image: "./video/rabbit.MP4",
                 caption: "ไปสวนสันว์กัน",
-                date: "19 ต.ค. 2025",
+                date: "23 ต.ค. 2026",
                 location: "สวนสัตว์เชียงใหม่",
                 rotate: "2.2deg",
                 tapeColor: "",
-                secretNote: "อากาศวันนั้นหนาวมาก แต่มือเธออุ่นที่สุดเลย ขอบคุณที่ยอมตื่นเช้าไปดูพระอาทิตย์ขึ้นด้วยกันนะ"
+                secretNote: "อากาศวันนั้นร้อนมาก แต่ไปกับเธอต่อให้ร้อนแค่ไหนก็พร้อมลุย"
             },
             {
-                image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=80",
-                caption: "รอยยิ้มที่ชอบที่สุด",
-                date: "05 พ.ย. 2025",
-                location: "ข----",
+                image: "./picture/Chikawa.JPEG",
+                caption: "หนังเรื่องแรกที่ไปดูด้วยกัน",
+                date: "24 ต.ค. 2026",
+                location: "เซนทรัล เฟสติวัล",
                 rotate: "-2.2deg",
                 tapeColor: "pink",
-                secretNote: "ขอให้เธอยิ้มสดใสแบบนี้ในทุกๆ วันเลยนะ ถ้าวันไหนเหนื่อยหรือท้อ หันมาก็จะเจอเราอยู่ข้างๆ เสมอ"
+                secretNote: "วันนั้นแพลนเราเฟลมาก สุดท้ายมาจบที่ดูหนังChikawa มาได้ไงไม่รู้แต่ก็สนุกมาก"
             },
             {
-                image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?auto=format&fit=crop&w=800&q=80",
-                caption: "คืนลอยกระทงปีนี้",
-                date: "ลอยกระทง 2026",
-                location: "ข----",
+                image: "./picture/photobooth.JPEG",
+                caption: "โฟโต้บูทแรกที่ไปถ่ายด้วยกัน",
+                date: "27 ต.ค. 2026",
+                location: "เซนทรัล เฟสติวัล",
                 rotate: "1.2deg",
                 tapeColor: "blue",
-                secretNote: "ปีนี้และปีต่อๆ ไป ก็ขอจองตัวเธอไปลอยกระทงด้วยกันทุกปีเลยนะ ห้ามหนีไปไหนเด็ดขาด!"
+                secretNote: "โฟโต้บูทแรกที่เคยถ่ายในชีวิตเลย พี่ชอบรอยยิ้มของหนูมากเลยนะ ขอให้หนูยิ้มสดใสแบบนี้ในทุกๆ วันเลยนะ ถ้าวันไหนเหนื่อยหรือท้อ หันมาก็จะเจอเราอยู่ข้างๆ เสมอ"
             }
         ];
 
@@ -556,7 +558,7 @@
                 modalImg.src = "";
                 modalVideo.src = fileUrl;
                 modalVideo.classList.remove('hidden');
-                modalVideo.play().catch(() => {});
+                modalVideo.play().catch(() => { });
             } else {
                 modalVideo.classList.add('hidden');
                 modalVideo.pause();
