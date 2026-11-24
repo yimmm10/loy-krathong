@@ -395,9 +395,10 @@
                 ✕
             </button>
 
-            <!-- รูปขนาดใหญ่ -->
-            <div class="rounded-xl overflow-hidden bg-slate-200 aspect-[4/3] shadow-inner">
-                <img id="modalImg" src="" alt="Memory" class="w-full h-full object-cover">
+            <!-- รูปขนาดใหญ่ หรือ วิดีโอ -->
+            <div id="modalMediaContainer" class="rounded-xl overflow-hidden bg-slate-200 aspect-[4/3] shadow-inner relative flex items-center justify-center">
+                <img id="modalImg" src="" alt="Memory" class="w-full h-full object-cover hidden">
+                <video id="modalVideo" src="" controls autoplay loop playsinline class="w-full h-full object-cover hidden"></video>
             </div>
 
             <!-- รายละเอียด & ข้อความในใจ -->
@@ -439,37 +440,37 @@
         // 2. รายการรูปภาพและข้อความลับ (นำลิงก์รูปคู่ของคุณมาวางแทนที่ image URL ได้เลย)
         const memories = [
             {
-                image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=800&q=80",
+                image: "./video/first_time.MP4",
                 caption: "เจอกันครั้งแรก",
                 date: "21 ต.ค. 2026",
                 location: "ม.แม่โจ้",
                 rotate: "-2deg",
                 tapeColor: "",
-                secretNote: "จำได้ว่าวันนั้นตื่นเต้นมาก กลัวพาเธอหลงทางสุดๆ แต่พอเห็นเธอยิ้มแล้วก็หายเหนื่อยเลย เป็นจุดเริ่มต้นที่ดีมากๆ ของเรา"
+                secretNote: "จำได้ว่าวันนั้นตื่นเต้นมาก ประหม่ามากที่จะได้เจอแถมเดินทางมาเหนื่อยมาก แต่พอเห็นเธอยิ้มแล้วก็หายเหนื่อยเลย"
             },
             {
-                image: "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=800&q=80",
+                image: "./picture/mae_kampong.JPEG",
                 caption: "ทริปแรกที่เราไปด้วยกัน",
                 date: "21 ต.ค. 2026",
                 location: "แม่กำปอง",
                 rotate: "1.8deg",
                 tapeColor: "pink",
-                secretNote: "ชอบเวลาเธอเผลอๆ แบบนี้ที่สุดเลย ดูเป็นธรรมชาติและน่ารักมากๆ อยากเก็บโมเมนต์แบบนี้ไว้ดูไปเรื่อยๆ เลนะ"
+                secretNote: "แม่กำปองอาการดีมาก ตอนเช้าร้อนหน่อยๆ แต่กลางคืนอากาศเย็นสบายและวิวดีมาก"
             },
             {
-                image: "https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=800&q=80",
+                image: "./picture/mae_kampong_food.JPEG",
                 caption: "มื้ออร่อยกับคนพิเศษ",
-                date: "28 มิ.ย. 2025",
-                location: "ข----",
+                date: "21 มิ.ย. 2025",
+                location: "แม่กำปอง",
                 rotate: "-1.5deg",
                 tapeColor: "blue",
                 secretNote: "ไม่ว่าจะไปกินร้านไหน ถ้าได้นั่งกินข้างๆ เธอ อาหารธรรมดาก็อร่อยขึ้นอีกสิบเท่าเลย (โดยเฉพาะตอนแย่งเธอกิน 555)"
             },
             {
-                image: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=800&q=80",
-                caption: "เดินเล่นรับลมหนาว",
+                image: "./video/rabbit.MP4",
+                caption: "ไปสวนสันว์กัน",
                 date: "19 ต.ค. 2025",
-                location: "ข----",
+                location: "สวนสัตว์เชียงใหม่",
                 rotate: "2.2deg",
                 tapeColor: "",
                 secretNote: "อากาศวันนั้นหนาวมาก แต่มือเธออุ่นที่สุดเลย ขอบคุณที่ยอมตื่นเช้าไปดูพระอาทิตย์ขึ้นด้วยกันนะ"
@@ -499,6 +500,11 @@
         document.getElementById('openingLetter').textContent = `"${CONFIG.openingLetter}"`;
         document.getElementById('senderSign').textContent = CONFIG.senderSignature;
 
+        // ตรวจสอบว่าไฟล์เป็นวิดีโอหรือไม่ (.mp4, .mov, .webm)
+        function isVideoFile(url) {
+            return /\.(mp4|webm|mov|m4v)($|\?)/i.test(url);
+        }
+
         // สร้างการ์ด Polaroid ในแกลเลอรี
         const galleryGrid = document.getElementById('galleryGrid');
         memories.forEach((item, index) => {
@@ -507,10 +513,20 @@
             card.style.transform = `rotate(${item.rotate})`;
             card.onclick = () => openModal(index);
 
+            const isVid = isVideoFile(item.image);
+            const mediaTag = isVid
+                ? `<div class="relative w-full h-full">
+                     <video src="${item.image}" autoplay loop muted playsinline class="w-full h-full object-cover transition-transform duration-500 hover:scale-105 pointer-events-none"></video>
+                     <span class="absolute bottom-2 right-2 bg-slate-900/70 text-amber-300 text-[10px] font-sans px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
+                       ▶ วิดีโอ
+                     </span>
+                   </div>`
+                : `<img src="${item.image}" alt="${item.caption}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">`;
+
             card.innerHTML = `
         <div class="washi-tape ${item.tapeColor}"></div>
         <div class="aspect-[4/3] w-full overflow-hidden rounded-lg bg-slate-200 mb-3.5">
-          <img src="${item.image}" alt="${item.caption}" loading="lazy" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+          ${mediaTag}
         </div>
         <div class="px-1">
           <p class="font-hand text-lg font-bold text-slate-800 leading-snug">${item.caption}</p>
@@ -526,10 +542,27 @@
         // ระบบเปิด-ปิด Modal Lightbox
         const modal = document.getElementById('photoModal');
         const modalContent = document.getElementById('modalContent');
+        const modalImg = document.getElementById('modalImg');
+        const modalVideo = document.getElementById('modalVideo');
 
         function openModal(index) {
             const item = memories[index];
-            document.getElementById('modalImg').src = item.image;
+            const isVid = isVideoFile(item.image);
+
+            if (isVid) {
+                modalImg.classList.add('hidden');
+                modalImg.src = "";
+                modalVideo.src = item.image;
+                modalVideo.classList.remove('hidden');
+                modalVideo.play().catch(() => {});
+            } else {
+                modalVideo.classList.add('hidden');
+                modalVideo.pause();
+                modalVideo.src = "";
+                modalImg.src = item.image;
+                modalImg.classList.remove('hidden');
+            }
+
             document.getElementById('modalLocation').textContent = `📍 ${item.location}`;
             document.getElementById('modalDate').textContent = `🗓️ ${item.date}`;
             document.getElementById('modalCaption').textContent = item.caption;
@@ -545,12 +578,18 @@
         }
 
         function closeModal() {
+            if (modalVideo) {
+                modalVideo.pause();
+            }
             modal.classList.add('opacity-0');
             modalContent.classList.remove('scale-100');
             modalContent.classList.add('scale-95');
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
+                if (modalVideo) {
+                    modalVideo.src = "";
+                }
             }, 300);
         }
 
