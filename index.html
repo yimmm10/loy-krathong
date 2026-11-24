@@ -749,8 +749,8 @@
         animateSky();
 
         // ==========================================
-        // DUAL-TRACK CROSSFADE MUSIC PLAYER
-        // แทร็ก 1: อย่าเสียใจคนเดียว -> fade เข้า แทร็ก 2: 40km
+        // DUAL-TRACK CROSSFADE MUSIC PLAYER + REVERB
+        // แทร็ก 1: อย่าเสียใจคนเดียว (ใส่ Reverb ก้องละมุน) -> fade เข้า แทร็ก 2: 40km
         // ==========================================
         const track1 = document.getElementById('audioTrack1');
         const track2 = document.getElementById('audioTrack2');
@@ -760,6 +760,54 @@
         let currentTrack = 1;
         let hasFadedToTrack2 = false;
         let hasFadedToTrack1 = false;
+        let audioCtx = null;
+        let reverbSetup = false;
+
+        // ฟังก์ชันสร้าง Effect Reverb จำลองบรรยากาศห้องกว้าง สไตล์ Slowed + Reverb
+        function setupReverb() {
+            if (reverbSetup || !track1) return;
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioCtx.createMediaElementSource(track1);
+
+                // สร้าง Impulse Response สำหรับเสียงสะท้อนก้อง (Acoustic Hall Reverb)
+                const sampleRate = audioCtx.sampleRate;
+                const duration = 2.8; // ความยาวหางเสียงก้อง (วินาที)
+                const decay = 2.5;
+                const length = sampleRate * duration;
+                const impulse = audioCtx.createBuffer(2, length, sampleRate);
+                const left = impulse.getChannelData(0);
+                const right = impulse.getChannelData(1);
+
+                for (let i = 0; i < length; i++) {
+                    const n = i / length;
+                    const env = Math.pow(1 - n, decay);
+                    left[i] = ((Math.random() * 2) - 1) * env;
+                    right[i] = ((Math.random() * 2) - 1) * env;
+                }
+
+                const convolver = audioCtx.createConvolver();
+                convolver.buffer = impulse;
+
+                // ปรับสัดส่วนเสียงตรง (Dry) 75% และเสียงก้องสะท้อน (Wet) 42%
+                const dryGain = audioCtx.createGain();
+                dryGain.gain.value = 0.75;
+
+                const wetGain = audioCtx.createGain();
+                wetGain.gain.value = 0.42;
+
+                source.connect(dryGain);
+                dryGain.connect(audioCtx.destination);
+
+                source.connect(convolver);
+                convolver.connect(wetGain);
+                wetGain.connect(audioCtx.destination);
+
+                reverbSetup = true;
+            } catch (err) {
+                console.warn("Web Audio Reverb fallback:", err);
+            }
+        }
 
         function fadeAudio(audio, startVol, targetVol, duration, onComplete) {
             if (!audio) return;
@@ -837,6 +885,14 @@
             const vinyl = document.getElementById('vinylIcon');
 
             if (!isPlaying) {
+                // เปิดระบบ Reverb สำหรับเพลง อย่าเสียใจคนเดียว
+                if (!reverbSetup) {
+                    setupReverb();
+                }
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
                 isPlaying = true;
                 vinyl.classList.add('spin-vinyl');
 
